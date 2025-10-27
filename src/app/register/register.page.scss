@@ -1,0 +1,183 @@
+.register-page {
+  --background: #fff; // Fondo blanco para toda la página
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box; // Asegura que el padding no añada tamaño extra
+
+    .hero {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 0;
+      flex-shrink: 0; // Evita que se encoja
+
+      .logo-wrapper {
+        width: 150px; // Tamaño del logo según el mockup
+        height: 150px;
+        margin-top: 50px; // Espacio superior
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .logo {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain; // Ajusta la imagen dentro del contenedor
+        }
+      }
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 25px;
+      text-align: center;
+      flex-grow: 1; // Permite que la tarjeta crezca y ocupe espacio
+      display: flex;
+      flex-direction: column;
+      justify-content: center; // Centra el contenido verticalmente
+      margin-top: -30px; // Superponer ligeramente sobre el logo
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); // Sombra sutil
+      z-index: 1; // Asegura que esté por encima del logo si hay superposición
+
+      .title {
+        font-size: 1.8em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .subtitle {
+        font-size: 0.9em;
+        color: #666;
+        margin-bottom: 25px;
+      }
+
+      .form-group {
+        border: none;
+        padding: 0;
+        margin: 0;
+        margin-bottom: 20px;
+
+        .input-item {
+          --background: #f8f8f8; // Fondo de los inputs
+          --border-radius: 8px;
+          --padding-start: 15px;
+          margin-bottom: 10px; // Espacio entre items
+          border: 1px solid #eee; // Borde sutil
+          box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); // Sombra interior para "profundidad"
+
+          ion-input {
+            --padding-top: 12px;
+            --padding-bottom: 12px;
+            --padding-start: 0px; // Resetear padding extra si lo tiene Ionic por defecto
+            font-size: 0.95em;
+            color: #333;
+
+            &.ion-focused {
+              --highlight-color-focused: transparent; // Eliminar el borde azul de enfoque de Ionic
+            }
+          }
+           // Estilo para el label flotante
+          ion-input[label-placement="floating"] {
+            --highlight-color-focused: transparent;
+            &.ion-focused .label-text,
+            .label-text.ion-focused,
+            .label-text.ion-has-value {
+              transform: translateY(-10px) scale(0.85); // Mueve el label hacia arriba
+              color: var(--ion-color-primary, #3880ff); // Color del label cuando está enfocado/con valor
+            }
+          }
+
+          // Estilo para ion-datetime para que se vea como ion-input
+          ion-datetime {
+            --padding-top: 12px;
+            --padding-bottom: 12px;
+            --padding-start: 15px; // Asegura el padding inicial
+            --padding-end: 15px;
+            font-size: 0.95em;
+            color: #333;
+            width: 100%; // Asegura que ocupe todo el ancho del item
+          }
+        }
+      }
+
+      .error-message {
+        color: var(--ion-color-danger, #eb445a); // Color de error de Ionic
+        font-size: 0.8em;
+        text-align: left;
+        margin-top: -5px; // Ajustar espacio
+        margin-bottom: 10px;
+        padding-left: 15px; // Alinea con el input
+      }
+
+      .continue-btn {
+        --background: #28a745; // Color verde para el botón (ejemplo)
+        --color: #fff;
+        --border-radius: 8px;
+        height: 50px;
+        font-size: 1.1em;
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 20px;
+
+        &.ion-activated {
+          --background-activated: #218838; // Tono más oscuro al presionar
+        }
+
+        &:disabled {
+          opacity: 0.6; // Botón deshabilitado más tenue
+        }
+      }
+
+      .pager {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px; // Espacio sobre el paginador
+
+        .dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background-color: #ddd; // Color de los dots inactivos
+          margin: 0 4px;
+
+          &.active {
+            background-color: var(--ion-color-primary, #3880ff); // Color del dot activo
+          }
+        }
+      }
+    }
+
+    .legal {
+      font-size: 0.75em;
+      color: #2b2a2a;
+      text-align: center;
+      padding-top: 20px;
+      flex-shrink: 0; // Evita que se encoja
+      
+      a {
+        color: var(--ion-color-primary, #3880ff);
+        text-decoration: none;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+// Estilos para accesibilidad (ocultar labels visualmente pero mantenerlos para lectores de pantalla)
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}

@@ -1,0 +1,65 @@
+<ion-content fullscreen class="register-page">
+  <main class="container">
+    <header class="hero">
+      <figure class="logo-wrapper">
+        <img src="../imgs/logo-app.png" alt="VirtualBookPet logo" class="logo" />
+      </figure>
+    </header>
+
+    <section class="card">
+      <h1 class="title">Crea una cuenta</h1>
+      <p class="subtitle">Ingresa tu correo electrónico para registrarte en esta aplicación</p>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+        <fieldset class="form-group">
+          <ion-item lines="none" class="input-item">
+            <ion-input label="Correo electrónico" labelPlacement="floating" 
+                       placeholder="correoelectrónico@dominio.com" 
+                       formControlName="email" type="email"></ion-input>
+          </ion-item>
+          <p class="error-message" *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+            <small *ngIf="email?.errors?.['required']">El correo es obligatorio.</small>
+            <small *ngIf="email?.errors?.['email']">Ingresa un correo válido.</small>
+          </p>
+
+          <ion-item lines="none" class="input-item">
+            <ion-input label="Nombre de Usuario" labelPlacement="floating" 
+                       placeholder="Nombre Usuario" 
+                       formControlName="username" type="text"></ion-input>
+          </ion-item>
+          <p class="error-message" *ngIf="username?.invalid && (username?.dirty || username?.touched)">
+            <small *ngIf="username?.errors?.['required']">El nombre de usuario es obligatorio.</small>
+          </p>
+
+          <ion-item lines="none" class="input-item">
+            <ion-input label="Contraseña" labelPlacement="floating" 
+                       placeholder="Contraseña" 
+                       formControlName="password" type="password"></ion-input>
+          </ion-item>
+          <p class="error-message" *ngIf="password?.invalid && (password?.dirty || password?.touched)">
+            <small *ngIf="password?.errors?.['required']">La contraseña es obligatoria.</small>
+            <small *ngIf="password?.errors?.['minlength']">Mínimo 6 caracteres.</small>
+          </p>
+
+          <ion-item lines="none" class="input-item">
+            <ion-input label="Fecha de Nacimiento" labelPlacement="floating" 
+                       placeholder="Fecha de nacimiento" 
+                       formControlName="birthdate" type="date"></ion-input>
+          </ion-item>
+        </fieldset>
+
+        <ion-button expand="block" type="submit" [disabled]="registerForm.invalid" class="continue-btn">
+          Continuar
+        </ion-button>
+        <footer class="legal">
+      <p>Al hacer clic en continuar, aceptas nuestros <a href="#">Términos de servicio</a> y <a href="#">Política de privacidad</a></p>
+    </footer>
+      </form>
+
+      <nav class="pager">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+      </nav>
+    </section>
+  </main>
+</ion-content>
