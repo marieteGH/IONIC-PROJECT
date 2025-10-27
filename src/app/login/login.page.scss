@@ -1,0 +1,91 @@
+.login-content {
+  --background: #0f0f0f;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.logo-container {
+  margin-top: 60px;
+}
+
+.logo {
+  width: 130px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.app-name {
+  font-weight: 700;
+  color: #00bcd4;
+  letter-spacing: 1px;
+}
+
+.form-container {
+  width: 85%;
+  max-width: 400px;
+  margin: 40px auto;
+}
+
+.form-title {
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.input-item {
+  --background: #1c1c1c;
+  --border-radius: 10px;
+  margin-bottom: 15px;
+  border: none;
+}
+
+ion-input {
+  color: #fff;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+  color: #bbb;
+
+  hr {
+    flex: 1;
+    border: none;
+    border-top: 1px solid #444;
+    margin: 0 10px;
+  }
+}
+
+.login-button {
+  --background: #00bcd4;
+  --color: #000;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.register-text {
+  margin: 15px 0 5px;
+  color: #bbb;
+  font-size: 0.9rem;
+}
+
+.register-button {
+  --border-color: #00bcd4;
+  --color: #00bcd4;
+}
+
+.terms-text {
+  margin-top: 20px;
+  font-size: 0.75rem;
+  color: #666;
+
+  a {
+    color: #00bcd4;
+    text-decoration: none;
+  }
+}
