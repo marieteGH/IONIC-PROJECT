@@ -1,5 +1,5 @@
 .register-page {
-  --background: #fff; // Fondo blanco para toda la página
+  --background: #0f0f0f; // Fondo blanco para toda la página
 
   .container {
     display: flex;
@@ -17,8 +17,8 @@
       flex-shrink: 0; // Evita que se encoja
 
       .logo-wrapper {
-        width: 150px; // Tamaño del logo según el mockup
-        height: 150px;
+        width: 250px; // Tamaño del logo según el mockup
+        height: 250px;
         margin-top: 50px; // Espacio superior
         display: flex;
         justify-content: center;
@@ -33,7 +33,7 @@
     }
 
     .card {
-      background: #fff;
+      background: #212020;
       border-radius: 10px;
       padding: 25px;
       text-align: center;
@@ -48,13 +48,13 @@
       .title {
         font-size: 1.8em;
         font-weight: bold;
-        color: #333;
+        color: #ffffff;
         margin-bottom: 5px;
       }
 
       .subtitle {
         font-size: 0.9em;
-        color: #666;
+        color: #ffffff;
         margin-bottom: 25px;
       }
 
