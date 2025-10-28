@@ -1,7 +1,9 @@
-import { Component, EnvironmentInjector, inject } from '@angular/core';
+import { Component, EnvironmentInjector, inject, OnDestroy, OnInit } from '@angular/core';
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { triangle, ellipse, square } from 'ionicons/icons';
+import { AuthService } from '../services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tabs',
@@ -9,10 +11,20 @@ import { triangle, ellipse, square } from 'ionicons/icons';
   styleUrls: ['tabs.page.scss'],
   imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
 })
-export class TabsPage {
+export class TabsPage implements OnInit, OnDestroy {
   public environmentInjector = inject(EnvironmentInjector);
+  isLoggedIn = false;
+  private sub?: Subscription;
 
-  constructor() {
+  constructor(private auth: AuthService) {
     addIcons({ triangle, ellipse, square });
+  }
+
+  ngOnInit() {
+    this.sub = this.auth.authState$.subscribe((s) => (this.isLoggedIn = s));
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
   }
 }
