@@ -17,12 +17,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('../register/register.page').then((m) => m.RegisterPage),
       },
+   // ... (otras rutas)
       {
         path: 'tab3',
         loadComponent: () =>
-          import('../booking/booking.page').then((m) => m.Tab3Page),
-        canActivate: [AuthGuard] // ⬅️ Protegemos esta ruta
+          import('../booking/booking.page').then((m) => m.BookingPage), // <-- CORRECTO
       },
+// ... (otras rutas)
       {
         path: '',
         redirectTo: '/tabs/login',

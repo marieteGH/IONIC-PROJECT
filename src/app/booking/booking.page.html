@@ -1,48 +1,54 @@
 <ion-content [fullscreen]="true" class="page-dark">
 
-  <div class="search-row">
-    <ion-icon name="search-outline" class="search-icon"></ion-icon>
-    <input class="search-input" placeholder="VILLAVICIOSA" />
-    <ion-icon name="link-outline" class="link-icon"></ion-icon>
-  </div>
+  <div class="page-wrapper">
 
-    <div class="meta-row">
-      <div class = "meta-left">
-        <ion-button fill="outline" size="small" class="Filtrar-btn">
-          <ion-icon slot="start" name="funnel-outline"></ion-icon>
-          Filtrar
-        </ion-button>
-        <ion-button fill="outline" size="small" class="Ordenar-btn">
-          Ordenar
-          <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
-        </ion-button>
+    <div class="sticky-header">
+      <div class="search-row">
+        <ion-icon name="search-outline" class="search-icon"></ion-icon>
+        <input class="search-input" placeholder="VILLAVICIOSA" />
+        <ion-icon name="link-outline" class="link-icon"></ion-icon>
       </div>
-      <ion-text color="medium" class="results-text">99 resultados</ion-text>
+
+      <div class="meta-row">
+        <div class="meta-left">
+          <ion-button fill="outline" size="small" class="Filtrar-btn">
+            <ion-icon slot="start" name="funnel-outline"></ion-icon>
+            Filtrar
+          </ion-button>
+          <ion-button fill="outline" size="small" class="Ordenar-btn">
+            Ordenar
+            <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
+          </ion-button>
+        </div>
+        <ion-text color="medium" class="results-text">99 resultados</ion-text>
+      </div>
     </div>
 
-  
-  <div id="map">
-    <img src="assets/imgs/Map.png" class="map-img" />
-  </div>
+    <div class="main-content-wrapper">
 
-  <ion-card class="perro-card">
-    <div class="media-wrap">
-      <ion-img src="assets/imgs/fotoPerro.png" class="fotoPerro"></ion-img>
-    </div>
+      <div id="map"></div>
 
-    <ion-card-header>
-      <ion-card-title>CONSTANTIN</ion-card-title>
-      <ion-card-subtitle class="muted">
-        <ion-icon name="star"></ion-icon> 4,8 (500 reseñas) ·
-        <ion-icon name="location-outline"></ion-icon> 10 kilómetros
-      </ion-card-subtitle>
-    </ion-card-header>
+      <div class="results-list">
+        
+        <ion-card class="perro-card">
+          <div class="media-wrap">
+            <ion-img src="assets/imgs/perrillo.jpg" class="fotoPerro"></ion-img>
+          </div>
 
-    <ion-card-content class="price-row">
-      <div class="price">
-        <strong>$12</strong> la hora
-      </div>
-      <ion-button class="Seleccionar">Seleccionar</ion-button>
-    </ion-card-content>
-  </ion-card>
-</ion-content>
+          <ion-card-header>
+            <ion-card-title>CONSTANTIN</ion-card-title>
+            <ion-card-subtitle class="muted">
+              <ion-icon name="star"></ion-icon> 4,8 (500 reseñas) ·
+              <ion-icon name="location-outline"></ion-icon> 10 kilómetros
+            </ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-card-content class="price-row">
+            <div class="price">
+              <strong>$12</strong> <span>la hora</span>
+            </div>
+            <ion-button class="Seleccionar">Seleccionar</ion-button>
+          </ion-card-content>
+        </ion-card>
+
+        </div> </div> </div> </ion-content>
