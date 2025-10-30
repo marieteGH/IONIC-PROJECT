@@ -1,0 +1,86 @@
+/* fondo negro a TODO el content */
+.page-dark {
+  --background: #000 !important;
+  color: #fff;
+
+/* tarjeta/controles en oscuro */
+.perro-card { --background: #fff;border: 1px ; border-radius: 18px; }
+
+/* barra superior pegada con padding de safe-area */
+.search-card {
+  position: sticky;           /* se queda arriba al hacer scroll */
+  top: 0;
+  z-index: 5;
+  padding: calc(10px + var(--ion-safe-area-top)) 12px 10px;
+  background: #000;           /* mismo fondo que la página */
+  border-bottom: 1px solid #24282c;
+}
+.search-row { display:flex; gap:10px; align-items:center; }
+.search-input {
+  flex:1; height:40px; padding:10px 14px; border-radius:999px;
+  border:1px solid #2f353a; background:#2a2f34; color:#fff; outline:none;
+}
+.search-icon,.link-icon{ font-size:22px; color:#eaeef2; opacity:.95; }
+
+.meta-row { display:flex; justify-content:space-between; align-items:center; margin-top:8px; }
+.meta-left { display:flex; gap:8px; }
+.results-text { font-size:12px; }
+
+.Filtrar-btn { --border-radius:10px; --background:#2a2f34; --color:#fff; --border-color: #ffffff; height:34px; }
+.Ordenar-btn { --border-radius:10px; --background:#2a2f34; --color:#fff; --border-color: #ffffff; height:34px; }
+.caret ion-icon { margin-left: 4px; }
+
+/* mapa */
+
+
+.map-img {
+  width: 70%;                /* más pequeña */
+  height: auto;              /* mantiene proporción */
+  display: block;            /* necesario para centrar con auto */
+  margin: 12px auto 16px;    /* <<< esto la centra */
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid #24282c;
+}
+
+
+/* imagen */
+.media-wrap { padding:12px 12px 0 12px; }
+.fotoPerro { width: 70%; height:auto; object-fit: cover; border-radius:14px; display:block; margin:0 auto; }
+
+/* rating + distancia */
+.muted { color:#9aa3ab; display:flex; align-items:center; gap:6px; }
+
+/* precio + botón derecha */
+
+.price-row { display:flex; justify-content:space-between; align-items:center; }
+
+
+.price { font-size:1.25rem; font-weight:800; }
+
+
+.Seleccionar {
+  --background:#000; --color:#fff; --border-radius:999px;
+  --padding-start:16px; --padding-end:16px; --padding-top:6px; --padding-bottom:6px;
+  text-transform:none; font-weight:600; height:32px; font-size:.9rem;
+}
+.Seleccionar:active { transform: scale(.96); }
+}
+.price {
+  display: flex;
+  align-items: baseline;   
+  gap: 4px;                
+  font-size: 1.4rem;  
+}     
+
+.price strong {
+  font-weight: 800;        
+  font-size: 1.5rem;       
+  color: #000;            
+}
+
+.price {
+  color: #555;            
+  font-weight: 400;        
+  font-size: 0.85rem;      
+}
