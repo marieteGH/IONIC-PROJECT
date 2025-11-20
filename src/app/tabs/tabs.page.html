@@ -1,20 +1,16 @@
- url=https://github.com/marieteGH/IONIC-PROJECT/blob/71bad4e7c468b6ec2b627cb3da321c82668b7e54/src/app/tabs/tabs.page.html
 <ion-tabs>
   <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="login" href="/tabs/login">
-      <ion-icon aria-hidden="true" name="triangle"></ion-icon>
-      <ion-label>login</ion-label>
+    <ion-tab-button tab="home" href="/tabs/home">
+      <ion-icon name="home"></ion-icon>
+      <ion-label>Home</ion-label>
     </ion-tab-button>
-
-    <ion-tab-button tab="register" href="/tabs/register">
-      <ion-icon aria-hidden="true" name="ellipse"></ion-icon>
-      <ion-label>register</ion-label>
+    <ion-tab-button tab="chat" href="/tabs/chat">
+      <ion-icon name="chatbubbles"></ion-icon>
+      <ion-label>Chat</ion-label>
     </ion-tab-button>
-
-    <!-- Sólo mostrar el botón de Tab3 si el usuario está autenticado -->
-    <ion-tab-button *ngIf="isLoggedIn" tab="booking" href="/tabs/booking">
-      <ion-icon aria-hidden="true" name="square"></ion-icon>
-      <ion-label>Booking</ion-label>
+    <ion-tab-button tab="publicacion" href="/tabs/publicacion">
+      <ion-icon name="create"></ion-icon>
+      <ion-label>Publicación</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>

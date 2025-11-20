@@ -4,7 +4,6 @@ import { addIcons } from 'ionicons';
 import { triangle, ellipse, square } from 'ionicons/icons';
 import { AuthService } from '../services/auth.service';
 import { Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-tabs',
@@ -16,7 +15,7 @@ export class TabsPage implements OnInit, OnDestroy {
   public environmentInjector = inject(EnvironmentInjector);
   isLoggedIn = false;
   private sub?: Subscription;
-
+  
   constructor(private auth: AuthService) {
     addIcons({ triangle, ellipse, square });
   }
@@ -28,4 +27,4 @@ export class TabsPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.sub?.unsubscribe();
   }
-}
+} 

@@ -10,10 +10,11 @@ export class AuthGuard implements CanActivate {
   constructor(private auth: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> {
+    console.log("Guard activado, isAuthenticated:", this.auth.isAuthenticated());
     if (this.auth.isAuthenticated()) {
       return true;
     }
-    // Redirigir a login si no está autenticado
-    return this.router.createUrlTree(['/tabs/login'], { queryParams: { returnUrl: state.url } });
+    // Redirigir correctamente a la ruta login FUERA de /tabs
+    return this.router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
   }
 }

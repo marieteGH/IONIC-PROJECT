@@ -26,10 +26,10 @@ export class LoginPage {
     this.auth.setSession(fakeToken);
 
     // Navegar a la tab protegida (reemplaza por la ruta que quieras)
-    this.navCtrl.navigateRoot('/tabs/tab3');
+    this.navCtrl.navigateRoot('/tabs/booking');
   }
 
   goToRegister() {
-    this.navCtrl.navigateForward('/tabs/register');
+    this.navCtrl.navigateForward('/register');
   }
 }

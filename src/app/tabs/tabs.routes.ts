@@ -1,39 +1,43 @@
 import { Routes } from '@angular/router';
-import { TabsPage } from './tabs.page';
+import { TabsPage } from '../tabs/tabs.page';
 import { AuthGuard } from '../services/auth.guard';
 
 export const routes: Routes = [
   {
+    path: 'login',
+    loadComponent: () => import('../login/login.page').then((m) => m.LoginPage),
+  },
+  {
+    path: 'register',
+    loadComponent: () => import('../register/register.page').then((m) => m.RegisterPage),
+  },
+  {
     path: 'tabs',
     component: TabsPage,
+    canActivate: [AuthGuard],
     children: [
+      //{
+        //path: 'home',
+        //loadComponent: () => import('../home/home.page').then((m) => m.HomePage),
+      //},
+      //{
+        //path: 'chat',
+        //loadComponent: () => import('../chat/chat.page').then((m) => m.ChatPage),
+      //},
       {
-        path: 'login',
-        loadComponent: () =>
-          import('../login/login.page').then((m) => m.LoginPage),
+        path: 'booking',
+        loadComponent: () => import('../booking/booking.page').then((m) => m.BookingPage),
       },
-      {
-        path: 'register',
-        loadComponent: () =>
-          import('../register/register.page').then((m) => m.RegisterPage),
-      },
-   // ... (otras rutas)
-      {
-        path: 'tab3',
-        loadComponent: () =>
-          import('../booking/booking.page').then((m) => m.BookingPage), // <-- CORRECTO
-      },
-// ... (otras rutas)
       {
         path: '',
-        redirectTo: '/tabs/login',
-        pathMatch: 'full',
-      },
+        redirectTo: 'home',
+        pathMatch: 'full'
+      }
     ],
   },
   {
     path: '',
-    redirectTo: '/tabs/login',
-    pathMatch: 'full',
-  },
+    redirectTo: 'login',
+    pathMatch: 'full'
+  }
 ];
