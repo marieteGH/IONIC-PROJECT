@@ -16,14 +16,18 @@ export const routes: Routes = [
     component: TabsPage,
     canActivate: [AuthGuard],
     children: [
-      //{
-        //path: 'home',
-        //loadComponent: () => import('../home/home.page').then((m) => m.HomePage),
-      //},
-      //{
-        //path: 'chat',
-        //loadComponent: () => import('../chat/chat.page').then((m) => m.ChatPage),
-      //},
+      {
+        path: 'home',
+        loadComponent: () => import('../home/home.page').then((m) => m.HomePage),
+      },
+      {
+        path: 'chat',
+        loadComponent: () => import('../chat/chat.page').then((m) => m.ChatPage),
+      },
+      {
+        path: 'publicacion',
+        loadComponent: () => import('../publicacion/publicacion.page').then((m) => m.PublicacionPage),
+      },
       {
         path: 'booking',
         loadComponent: () => import('../booking/booking.page').then((m) => m.BookingPage),

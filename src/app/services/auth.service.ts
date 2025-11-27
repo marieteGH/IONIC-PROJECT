@@ -15,7 +15,9 @@ export class AuthService {
     this.authState.next(!!token);
   }
 
-  isAuthenticated(): boolean {
+
+
+  isAuthenticated(): boolean { 
     return this.authState.value;
   }
 
@@ -27,6 +29,6 @@ export class AuthService {
   logout() {
     localStorage.removeItem(this.TOKEN_KEY);
     this.authState.next(false);
-    this.router.navigateByUrl('/tabs/login', { replaceUrl: true });
+    this.router.navigateByUrl('/login', { replaceUrl: true }); // <-- CAMBIO AQUÍ
   }
 }
