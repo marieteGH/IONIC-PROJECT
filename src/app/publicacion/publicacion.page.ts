@@ -3,6 +3,20 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+/**
+ * Interfaz para tipificar la estructura del formulario.
+ * Se define 'string | null' para las fechas para que sean compatibles
+ * con el evento ionChange de ion-datetime, que puede devolver null.
+ */
+interface PublicacionForm {
+  mascotaNombre: string;
+  titulo: string;
+  descripcion: string;
+  fechaInicio: string | string[] | null | undefined; 
+  fechaFin: string | string[] | null | undefined;     
+  ubicacion: string;
+}
+
 @Component({
   selector: 'app-publicacion',
   standalone: true,
@@ -14,12 +28,13 @@ export class PublicacionPage {
 
   imagenPreview: string | null = null;
 
-  form = {
+  // El objeto form ahora está tipificado y sus valores iniciales coinciden con la interfaz.
+  form: PublicacionForm = {
     mascotaNombre: '',
     titulo: '',
     descripcion: '',
-    fechaInicio: '',
-    fechaFin: '',
+    fechaInicio: null, // Inicializado como null
+    fechaFin: null,    // Inicializado como null
     ubicacion: '',
   };
 
