@@ -33,6 +33,14 @@ export const routes: Routes = [
         loadComponent: () => import('../booking/booking.page').then((m) => m.BookingPage),
       },
       {
+        path: 'mis-mascotas',
+        loadComponent: () => import('../mis-mascotas/mis-mascotas.page').then((m) => m.MisMascotasPage),
+      },
+      {
+        path: 'add-mascota',
+        loadComponent: () => import('../add-mascota/add-mascota.page').then((m) => m.AddMascotaPage),
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full'

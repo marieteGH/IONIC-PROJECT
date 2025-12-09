@@ -1,5 +1,6 @@
 import { Component, EnvironmentInjector, inject, OnDestroy, OnInit } from '@angular/core';
-import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
+import { RouterModule } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { triangle, ellipse, square } from 'ionicons/icons';
 import { AuthService } from '../services/auth.service';
@@ -9,7 +10,9 @@ import { Subscription } from 'rxjs';
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
-  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
+  // Convertimos el componente a standalone e importamos IonicModule y RouterModule
+  standalone: true,
+  imports: [IonicModule, RouterModule],
 })
 export class TabsPage implements OnInit, OnDestroy {
   public environmentInjector = inject(EnvironmentInjector);
@@ -27,4 +30,4 @@ export class TabsPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.sub?.unsubscribe();
   }
-} 
+}

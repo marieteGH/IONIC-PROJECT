@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Mis mascotas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/tabs/add-mascota">Añadir</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-item *ngFor="let m of (mascotas$ | async)">
+      <ion-label>
+        <h2>{{ m.nombre }}</h2>
+        <p>{{ m.especie || '—' }} • {{ m.edad ?? '—' }} años</p>
+      </ion-label>
+      <ion-button slot="end" color="danger" (click)="borrar(m.id)">Borrar</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-item *ngIf="(mascotas$ | async)?.length === 0">
+    <ion-label>No hay mascotas. Añade la tuya :)</ion-label>
+  </ion-item>
+</ion-content>
