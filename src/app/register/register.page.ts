@@ -1,6 +1,8 @@
+// src/app/register/register.page.ts
+
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// ✅ FIX TS2305/NG1010: Importamos componentes Ionic individuales
+// Importaciones individuales de componentes Ionic
 import { NavController, IonContent, IonHeader, IonToolbar, IonTitle, IonInput, IonButton, IonItem, IonLabel } from '@ionic/angular/standalone'; 
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms'; 
 
@@ -10,10 +12,10 @@ import { Usuario } from '../models/usuario';
 
 @Component({
   standalone: true,
-  // ✅ FIX NG1010: Se importan los componentes Ionic individuales (asumiendo los necesarios)
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    // Componentes de Ionic usados en el template (limpia warnings si no se usan)
     IonContent, IonHeader, IonToolbar, IonTitle, IonInput, IonButton, IonItem, IonLabel
   ],
   selector: 'app-register',
@@ -30,8 +32,6 @@ export class RegisterPage implements OnInit {
 
   constructor() {} 
 
-  // ... (ngOnInit, getters, y onSubmit se mantienen, ya que la lógica es correcta)
-
   ngOnInit() {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -41,17 +41,15 @@ export class RegisterPage implements OnInit {
     });
   }
 
+  // --- GETTERS (NECESARIOS PARA EL HTML) ---
   get email(): AbstractControl | null { return this.registerForm.get('email'); }
   get username(): AbstractControl | null { return this.registerForm.get('username'); }
   get password(): AbstractControl | null { return this.registerForm.get('password'); }
-  
   getControl(name: string): AbstractControl | null { return this.registerForm.get(name); }
-
   isInvalid(name: string): boolean {
     const c = this.getControl(name);
     return !!(c && c.invalid && (c.dirty || c.touched));
   }
-  
   getErrorMessage(name: string): string | null {
     const c = this.getControl(name);
     const errors = c?.errors;
@@ -60,6 +58,26 @@ export class RegisterPage implements OnInit {
     if (errors['email']) return 'Debe ser un correo electrónico válido.';
     if (errors['minlength']) return `La contraseña debe tener al menos ${errors['minlength'].requiredLength} caracteres.`;
     return 'Campo inválido.';
+  }
+
+  // -----------------------------------------------------
+  // 🔑 FUNCIÓN PARA GUARDAR CREDENCIALES EN LOCALSTORAGE (Automático en el navegador)
+  // -----------------------------------------------------
+  private saveTestCredentials(email: string, password: string) {
+    try {
+      const storedData = localStorage.getItem('test_credentials');
+      const credentials: { email: string, password: string }[] = storedData ? JSON.parse(storedData) : [];
+      
+      // Añade el nuevo usuario
+      if (!credentials.some(c => c.email === email)) {
+        credentials.push({ email, password });
+      }
+      
+      localStorage.setItem('test_credentials', JSON.stringify(credentials));
+      console.log(`🔑 Credenciales de prueba guardadas en localStorage para: ${email}`);
+    } catch (e) {
+      console.error('Error al guardar credenciales en localStorage:', e);
+    }
   }
 
   async onSubmit() {
@@ -72,7 +90,6 @@ export class RegisterPage implements OnInit {
 
     try {
       console.log('Intentando registrar usuario en Auth...');
-      // Usando Auth Modular
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
       
       const firebaseUser = userCredential.user;
@@ -87,10 +104,20 @@ export class RegisterPage implements OnInit {
           roles: { user: true }
         };
 
-        // Usando servicio de Firestore Modular
         await this.usuarioService.setUsuario(uid, userData);
         
         console.log('✅ Registro exitoso. UID:', uid);
+        
+        // 🔑 1. GUARDADO AUTOMÁTICO EN LOCALSTORAGE (Persiste en el navegador)
+        this.saveTestCredentials(email, password); 
+
+        // 🔑 2. IMPRESIÓN INSTANTÁNEA EN CONSOLA (Fácil de copiar para el login)
+        console.warn('=========================================');
+        console.warn('🔑 CREDENCIALES DE PRUEBA (COPIA ESTO):');
+        console.warn(`EMAIL: ${email}`);
+        console.warn(`PASSWORD: ${password}`);
+        console.warn('=========================================');
+
         this.navCtrl.navigateRoot('/home'); 
       } else {
         throw new Error("No se pudo obtener la información del usuario después del registro.");
