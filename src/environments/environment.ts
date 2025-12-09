@@ -2,8 +2,29 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+
 export const environment = {
-  production: false
+  production: false,
+  firebaseConfig: {
+   apiKey: "AIzaSyCjfy4adfBNUyYHOJyYvAGv6hW22NSaXy8",
+   authDomain: "virtualbookpet.firebaseapp.com",
+   projectId: "virtualbookpet",
+   storageBucket: "virtualbookpet.firebasestorage.app",
+   messagingSenderId: "180660530954",
+   appId: "1:180660530954:web:1e1d43dee849e331c014f3",
+   measurementId: "G-EWTNL1FXGF"
+  }
+};
+
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCjfy4adfBNUyYHOJyYvAGv6hW22NSaXy8",
+  authDomain: "virtualbookpet.firebaseapp.com",
+  projectId: "virtualbookpet",
+  storageBucket: "virtualbookpet.firebasestorage.app",
+  messagingSenderId: "180660530954",
+  appId: "1:180660530954:web:1e1d43dee849e331c014f3",
+  measurementId: "G-EWTNL1FXGF"
 };
 
 /*
