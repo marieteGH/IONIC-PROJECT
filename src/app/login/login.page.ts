@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { NavController, IonicModule } from '@ionic/angular';
+import { Component, inject } from '@angular/core';
+// ✅ FIX TS2305/NG1010: Importaciones individuales de componentes Ionic.
+import { NavController, IonContent, IonHeader, IonToolbar, IonTitle, IonButton, IonInput, IonItem, IonList } from '@ionic/angular/standalone'; 
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 
@@ -8,28 +9,32 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule]
+  // ✅ FIX NG1010: Se importan los componentes Ionic usados en el template
+  imports: [
+    FormsModule,
+    IonContent, IonHeader, IonToolbar, IonTitle, IonButton, IonInput, IonItem, IonList
+  ]
 })
 export class LoginPage {
   email: string = '';
   password: string = '';
 
-  constructor(private navCtrl: NavController, private auth: AuthService) {}
+  private navCtrl: NavController = inject(NavController);
+  private auth: AuthService = inject(AuthService);
+
+  constructor() {} 
 
   login() {
     console.log('Correo:', this.email);
     console.log('Contraseña:', this.password);
-    // Aquí va la lógica real de autenticación contra tu backend.
-    // Si el login es exitoso, guardamos token y navegamos a la tab protegida.
-    // Ejemplo con token falso:
     const fakeToken = 'FAKE_TOKEN';
     this.auth.setSession(fakeToken);
 
-    // Navegar a la tab protegida (reemplaza por la ruta que quieras)
     this.navCtrl.navigateRoot('/tabs/booking');
   }
 
   goToRegister() {
-    this.navCtrl.navigateForward('/register');
+    // ✅ FIX NAVEGACIÓN: Asegura el salto a la página de registro
+    this.navCtrl.navigateRoot('/register');
   }
 }

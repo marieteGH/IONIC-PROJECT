@@ -9,12 +9,18 @@ import { AuthService } from '../services/auth.service';
 export class AuthGuard implements CanActivate {
   constructor(private auth: AuthService, private router: Router) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> {
-    console.log("Guard activado, isAuthenticated:", this.auth.isAuthenticated());
-    if (this.auth.isAuthenticated()) {
+  // Ahora manejamos la comprobación de forma asíncrona para esperar
+  // a la validación inicial del token en AuthService.
+  async canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Promise<boolean | UrlTree> {
+    // Esperar a que AuthService haya terminado su inicialización/validación
+    const isAuth = await this.auth.isAuthenticatedAsync();
+    if (isAuth) {
       return true;
     }
-    // Redirigir correctamente a la ruta login FUERA de /tabs
+    // Redirigir a login fuera de /tabs y pasar returnUrl
     return this.router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
   }
 }

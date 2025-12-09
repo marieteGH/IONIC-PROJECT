@@ -1,37 +1,12 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
-
 export const environment = {
   production: false,
-  firebaseConfig: {
-   apiKey: "AIzaSyCjfy4adfBNUyYHOJyYvAGv6hW22NSaXy8",
-   authDomain: "virtualbookpet.firebaseapp.com",
-   projectId: "virtualbookpet",
-   storageBucket: "virtualbookpet.firebasestorage.app",
-   messagingSenderId: "180660530954",
-   appId: "1:180660530954:web:1e1d43dee849e331c014f3",
-   measurementId: "G-EWTNL1FXGF"
+  firebase: {
+    apiKey: "AIzaSyDVDHcLZX0KFyRsJbkrL0aLXmynaqFHKHI",
+    authDomain: "virtualbookpet-238cd.firebaseapp.com",
+    projectId: "virtualbookpet-238cd",
+    storageBucket: "virtualbookpet-238cd.appspot.com",
+    messagingSenderId: "714130059714",
+    appId: "1:714130059714:web:97e3f1f4c4fc8b53b7665b",
+    measurementId: "G-0ERJEMQL4W"
   }
 };
-
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCjfy4adfBNUyYHOJyYvAGv6hW22NSaXy8",
-  authDomain: "virtualbookpet.firebaseapp.com",
-  projectId: "virtualbookpet",
-  storageBucket: "virtualbookpet.firebasestorage.app",
-  messagingSenderId: "180660530954",
-  appId: "1:180660530954:web:1e1d43dee849e331c014f3",
-  measurementId: "G-EWTNL1FXGF"
-};
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
