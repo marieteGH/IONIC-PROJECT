@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   Firestore,
   collection,
@@ -14,14 +14,17 @@ import {
 import { Observable } from 'rxjs';
 import { Mascota } from '../models/mascota';
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class MascotasService {
 
   private path = 'mascotas'; // colección principal
+  private firestore = inject(Firestore);
 
-  constructor(private firestore: Firestore) {}
+
+  constructor() {}
 
   private col() {
     return collection(this.firestore, this.path);
@@ -35,7 +38,10 @@ export class MascotasService {
 
   // Obtener todas las mascotas de un usuario (Observable)
   getAllForUser(uid: string): Observable<Mascota[]> {
-    const q = query(this.col(), where('ownerId', '==', uid));
+    
+    const colRef = collection(this.firestore, 'mascotas');
+    const q = query(colRef, where('ownerId', '==', uid));
+
     return collectionData(q, { idField: 'id' }) as Observable<Mascota[]>;
   }
 

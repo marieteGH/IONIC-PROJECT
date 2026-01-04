@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { Auth, authState } from '@angular/fire/auth';
 import { MascotasService } from '../services/mascotas.service';
 import { Mascota } from '../models/mascota';
+import { filter, switchMap } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-mis-mascotas',
@@ -15,16 +16,11 @@ import { Mascota } from '../models/mascota';
   imports: [IonicModule, CommonModule],
 })
 export class MisMascotasPage {
-  mascotas$: Observable<Mascota[]> = of([]);
-
-  constructor(private mascotasService: MascotasService, private auth: Auth) {
-    this.mascotas$ = authState(this.auth).pipe(
-      switchMap(user => {
-        if (user) return this.mascotasService.getAllForUser(user.uid);
-        return of([]);
-      })
-    );
-  }
+  mascotas$: Observable<Mascota[]> = authState(this.auth).pipe(
+    filter((user): user is NonNullable<typeof user> => !!user),
+    switchMap(user => this.mascotasService.getAllForUser(user.uid))
+  );
+  constructor(private mascotasService: MascotasService, private auth: Auth) {}
 
   borrar(id?: string) {
     if (!id) return;

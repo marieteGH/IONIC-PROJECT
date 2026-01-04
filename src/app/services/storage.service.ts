@@ -1,27 +1,33 @@
-import { Injectable } from '@angular/core';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { finalize } from 'rxjs/operators';
+import { Injectable, inject } from '@angular/core';
+import { Storage, ref, uploadBytesResumable, getDownloadURL } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class StorageService {
-  constructor(private storage: AngularFireStorage) {}
+  private storage = inject(Storage);
 
   uploadProfileImage(file: File, path: string): Observable<string> {
-    const fileRef = this.storage.ref(path);
-    const task = this.storage.upload(path, file);
+    return new Observable<string>((observer) => {
+      const storageRef = ref(this.storage, path);
+      const task = uploadBytesResumable(storageRef, file);
 
-    return new Observable<string>(observer => {
-      task.snapshotChanges().pipe(
-        finalize(() => {
-          fileRef.getDownloadURL().subscribe(url => {
+      task.on(
+        'state_changed',
+        // progreso (si algún día quieres, aquí puedes emitir %)
+        undefined,
+        // error
+        (err) => observer.error(err),
+        // complete
+        async () => {
+          try {
+            const url = await getDownloadURL(task.snapshot.ref);
             observer.next(url);
             observer.complete();
-          }, err => observer.error(err));
-        })
-      ).subscribe();
+          } catch (e) {
+            observer.error(e);
+          }
+        }
+      );
     });
   }
 }

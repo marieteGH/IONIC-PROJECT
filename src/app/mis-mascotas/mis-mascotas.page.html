@@ -18,7 +18,7 @@
     </ion-item>
   </ion-list>
 
-  <ion-item *ngIf="(mascotas$ | async)?.length === 0">
+  <div *ngIf="(mascotas$ | async)?.length === 0" style="padding: 20px; text-align: center;">
     <ion-label>No hay mascotas. Añade la tuya :)</ion-label>
-  </ion-item>
+  </div>
 </ion-content>

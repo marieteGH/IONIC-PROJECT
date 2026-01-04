@@ -37,3 +37,15 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/* Evita que el contenedor (ion-router-outlet) se trague los clicks,
+   pero permite que los hijos sí los reciban */
+   ion-router-outlet {
+    pointer-events: none;
+  }
+  
+  ion-router-outlet > * {
+    pointer-events: auto;
+  }
+  
+  

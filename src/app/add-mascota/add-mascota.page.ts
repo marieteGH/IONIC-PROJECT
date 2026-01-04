@@ -35,16 +35,25 @@ export class AddMascotaPage {
   async submit(): Promise<void> {
     if (this.form.invalid) return;
     this.loading = true;
-
-    const user = await firstValueFrom(authState(this.auth));
+  
+    const user = this.auth.currentUser ?? await firstValueFrom(authState(this.auth));
     if (!user) {
       this.loading = false;
       await this.router.navigate(['/login']);
       return;
     }
-
+  
+    const raw = this.form.getRawValue();
+    const payload = {
+      nombre: (raw.nombre ?? '').trim(),
+      especie: (raw.especie ?? '').trim(),
+      edad: raw.edad === null || raw.edad === '' ? null : Number(raw.edad),
+      descripcion: (raw.descripcion ?? '').trim(),
+    };
+  
     try {
-      await this.mascotasService.createForUser(user.uid, this.form.value);
+      const ref = await this.mascotasService.createForUser(user.uid, payload);
+      console.log('Mascota creada:', ref.id);
       await this.router.navigate(['/tabs/mis-mascotas']);
     } catch (err) {
       console.error('Error creando mascota', err);
@@ -52,4 +61,5 @@ export class AddMascotaPage {
       this.loading = false;
     }
   }
+  
 }

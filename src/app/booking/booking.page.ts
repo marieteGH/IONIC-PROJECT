@@ -51,10 +51,11 @@ export class BookingPage {
       setTimeout(() => {
         this.loadMap();
         this.mapInitialized = true; // Marca como inicializado
-      }, 150); // 150ms es un retraso seguro y casi imperceptible
+      }, 50); // 150ms es un retraso seguro y casi imperceptible
 
     }
   }
+
 
   loadMap() {
     // Coordenadas de ejemplo (Villaviciosa de Odón, Madrid)
