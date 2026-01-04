@@ -1,0 +1,37 @@
+<ion-tabs>
+  <!-- Outlet donde se renderizan las páginas de las pestañas -->
+  <ion-router-outlet></ion-router-outlet>
+
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="home" href="/tabs/home">
+      <ion-icon name="home"></ion-icon>
+      <ion-label>Home</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="booking" href="/tabs/booking">
+      <ion-icon name="book-outline"></ion-icon>
+      <ion-label>Booking</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="chat" href="/tabs/chat">
+      <ion-icon name="chatbubbles"></ion-icon>
+      <ion-label>Chat</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="publicacion" href="/tabs/publicacion">
+      <ion-icon name="create"></ion-icon>
+      <ion-label>Publicación</ion-label>
+    </ion-tab-button>
+
+    <!-- pestañas nuevas: tab en kebab-case sin acentos -->
+    <ion-tab-button tab="add-mascota" href="/tabs/add-mascota">
+      <ion-icon name="paw"></ion-icon>
+      <ion-label>Añadir</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="mis-mascotas" href="/tabs/mis-mascotas">
+      <ion-icon name="list"></ion-icon>
+      <ion-label>Mis mascotas</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

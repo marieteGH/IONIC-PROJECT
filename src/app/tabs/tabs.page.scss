@@ -1,0 +1,50 @@
+
+/* En src/app/tabs/tabs.page.scss */
+
+ion-tab-bar {
+  --background: #000;
+  --color: #777777; /* Color de íconos inactivos */
+  --color-selected: #ffffff; /* Color de ícono activo */
+  
+  /* Añade un borde superior que combine con tu diseño */
+  border-top: 1px solid #24282c; 
+}
+
+.booking-icon {
+  /* Contenedor y tamaño base para el icono */
+  display: inline-block;
+  width: 20px; /* Ajusta el tamaño según sea necesario */
+  height: 20px;
+  position: relative;
+  /* El color del pin (parecido al de Booking) */
+  color: #003580; 
+}
+
+.booking-icon::before {
+  /* La parte principal del pin (forma de lágrima/gota) */
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: currentColor; /* Usa el color definido en .booking-icon */
+  border-radius: 50% 50% 50% 0; /* Hace la forma de lágrima */
+  transform: rotate(-45deg); /* Gira para que la punta mire hacia abajo */
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.booking-icon::after {
+  /* El punto blanco en el centro del pin */
+  content: '';
+  display: block;
+  width: 50%;
+  height: 50%;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  /* Centra el círculo blanco dentro del pin */
+  top: 25%; 
+  left: 25%;
+  z-index: 1; /* Asegura que esté por encima del pin */
+}
