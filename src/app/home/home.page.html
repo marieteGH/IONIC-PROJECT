@@ -1,6 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Muro de Mascotas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarSesion()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -30,7 +35,7 @@
            style="width: 100%; max-height: 350px; object-fit: cover; display: block;"/>
 
       <ion-card-header>
-        <ion-card-title style="color: aliceblue;">{{ p.titulo }}</ion-card-title>
+        <ion-card-title>{{ p.titulo }}</ion-card-title>
       </ion-card-header>
 
       <ion-card-content>
@@ -47,6 +52,14 @@
             <ion-label>Desde: {{ p.fechaInicio | date:'shortDate' }}</ion-label>
           </ion-chip>
         </div>
+
+        <div style="margin-top: 20px;" *ngIf="myUid">
+          <ion-button expand="block" (click)="contactarDueno(p)" [disabled]="!p.usuarioId || p.usuarioId === myUid">
+            <ion-icon slot="start" name="chatbubble-ellipses-outline"></ion-icon>
+            {{ p.usuarioId === myUid ? 'Es tu publicación' : 'Estoy interesado' }}
+          </ion-button>
+        </div>
+
       </ion-card-content>
     </ion-card>
 
