@@ -80,7 +80,7 @@ export class RegisterPage implements OnInit {
     }
   }
 
-  async onSubmit() {
+  async onSubmit() {  
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
@@ -118,7 +118,7 @@ export class RegisterPage implements OnInit {
         console.warn(`PASSWORD: ${password}`);
         console.warn('=========================================');
 
-        this.navCtrl.navigateRoot('/home'); 
+        this.navCtrl.navigateRoot('/tabs/home'); 
       } else {
         throw new Error("No se pudo obtener la información del usuario después del registro.");
       }
