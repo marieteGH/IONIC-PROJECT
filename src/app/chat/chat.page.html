@@ -5,7 +5,7 @@
         <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>{{ chatId ? 'Chat con: ' + receptorNombre : 'Mis Mensajes' }}</ion-title>
+    <ion-title>{{ chatId ? 'Chat con: ' + (receptorNombre || 'Usuario') : 'Mis Mensajes' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -22,8 +22,9 @@
         </ion-label>
       </ion-item>
     </ion-list>
+    
     <div *ngIf="(misChats$ | async)?.length === 0" style="text-align: center; margin-top: 20px;">
-      <p>No tienes mensajes aún.</p>
+      <p>No tienes mensajes.</p>
     </div>
   </div>
 
@@ -37,11 +38,11 @@
   </div>
 </ion-content>
 
-<ion-footer *ngIf="chatId" class="ion-no-border">
+<ion-footer *ngIf="chatId">
   <ion-toolbar>
     <ion-item lines="none" style="--background: #f4f4f4; margin: 8px; border-radius: 20px;">
-      <ion-input [(ngModel)]="nuevoMensaje" placeholder="Escribe un mensaje..." (keyup.enter)="enviar()"></ion-input>
-      <ion-button slot="end" fill="clear" (click)="enviar()" [disabled]="!nuevoMensaje.trim()">
+      <ion-input [(ngModel)]="nuevoMensaje" placeholder="Mensaje..." (keyup.enter)="enviar()"></ion-input>
+      <ion-button slot="end" fill="clear" (click)="enviar()">
         <ion-icon name="send"></ion-icon>
       </ion-button>
     </ion-item>
