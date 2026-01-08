@@ -34,15 +34,20 @@ export class ChatPage implements OnInit {
   }
 
   ngOnInit() {
-    this.myUid = this.auth.getUserId() || ''; // Usando tu función getUserId()
+    // Obtenemos tu ID real usando la función de tu servicio
+    this.myUid = this.auth.getUserId() || '';
 
     this.route.queryParams.subscribe(params => {
       this.chatId = params['chatId'] || null;
       this.receptorNombre = params['nombre'] || 'Chat';
       
       if (this.chatId) {
+        // Cargar mensajes de la conversación
         this.mensajes$ = this.chatService.getMessages(this.chatId);
+        this.misChats$ = null;
       } else {
+        // Cargar lista de conversaciones
+        this.mensajes$ = null;
         if (this.myUid) {
           this.misChats$ = this.chatService.getMyChats(this.myUid);
         }
@@ -50,6 +55,7 @@ export class ChatPage implements OnInit {
     });
   }
 
+  // Función para extraer el nombre del otro usuario del chat
   getNombreChat(chat: any): string {
     if (chat.nombres) {
       const ids = Object.keys(chat.nombres);
@@ -59,9 +65,14 @@ export class ChatPage implements OnInit {
     return 'Conversación';
   }
 
+  // CORRECCIÓN: Ahora pasamos el nombre al navegar para evitar el "Chat con: Conversación"
   irAChat(chat: any) {
+    const nombre = this.getNombreChat(chat);
     this.router.navigate(['/tabs/chat'], { 
-      queryParams: { chatId: chat.id, nombre: this.getNombreChat(chat) } 
+      queryParams: { 
+        chatId: chat.id, 
+        nombre: nombre 
+      } 
     });
   }
 

@@ -23,7 +23,7 @@
       </ion-item>
     </ion-list>
     <div *ngIf="(misChats$ | async)?.length === 0" style="text-align: center; margin-top: 20px;">
-      <p>No tienes mensajes.</p>
+      <p>No tienes mensajes aún.</p>
     </div>
   </div>
 
@@ -37,11 +37,11 @@
   </div>
 </ion-content>
 
-<ion-footer *ngIf="chatId">
+<ion-footer *ngIf="chatId" class="ion-no-border">
   <ion-toolbar>
     <ion-item lines="none" style="--background: #f4f4f4; margin: 8px; border-radius: 20px;">
-      <ion-input [(ngModel)]="nuevoMensaje" placeholder="Mensaje..." (keyup.enter)="enviar()"></ion-input>
-      <ion-button slot="end" fill="clear" (click)="enviar()">
+      <ion-input [(ngModel)]="nuevoMensaje" placeholder="Escribe un mensaje..." (keyup.enter)="enviar()"></ion-input>
+      <ion-button slot="end" fill="clear" (click)="enviar()" [disabled]="!nuevoMensaje.trim()">
         <ion-icon name="send"></ion-icon>
       </ion-button>
     </ion-item>
