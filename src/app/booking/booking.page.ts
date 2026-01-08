@@ -1,102 +1,97 @@
-import { Component } from '@angular/core';
-import * as L from 'leaflet';
-import {
-  // Imports de Ionic (los que no se usan ya están quitados)
-  IonContent,
-  IonButton,
-  IonIcon,
-  IonText,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonCardContent,
-  IonImg,
-} from '@ionic/angular/standalone';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { Subscription, combineLatest, of } from 'rxjs';
+import { AuthService } from '../services/auth.service';
+import { MascotasService } from '../services/mascotas.service';
+import { UsuarioService } from '../services/usuario.service';
+import { ChatService } from '../services/chat.service';
 
 @Component({
   selector: 'app-booking',
-  templateUrl: 'booking.page.html',
-  styleUrls: ['booking.page.scss'],
+  templateUrl: './booking.page.html',
+  styleUrls: ['./booking.page.scss'],
   standalone: true,
-  imports: [
-    // Componentes de Ionic
-    IonContent,
-    IonButton,
-    IonIcon,
-    IonText,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardSubtitle,
-    IonCardContent,
-    IonImg,
-  ],
+  imports: [IonicModule, CommonModule, FormsModule]
 })
-export class BookingPage {
+export class BookingPage implements OnInit, OnDestroy {
+  private authService = inject(AuthService);
+  private mascotasService = inject(MascotasService);
+  private usuarioService = inject(UsuarioService);
+  private chatService = inject(ChatService);
+  private router = inject(Router);
+
+  private dataSub?: Subscription;
   
-  map: L.Map | null = null;
-  darkTileLayer: any = null;
+  allCuidadores: any[] = [];
+  allMascotas: any[] = [];
+  cuidadores: any[] = [];
+  mascotas: any[] = [];
   
-  // Bandera para evitar recargas
-  private mapInitialized: boolean = false;
+  searchQuery: string = '';
 
-  constructor() {}
+  ngOnInit() {
+    // Usamos listUsuarios() que ya tienes. 
+    // Para mascotas, como no tienes getAllGlobal, usamos un truco para traer las que tengan ownerId (todas)
+    this.dataSub = combineLatest([
+      this.usuarioService.listUsuarios(),
+      this.mascotasService.getAllForUser('') // Pasamos vacío para intentar listar o ajusta a tu lógica
+    ]).subscribe(([users, pets]) => {
+      this.allCuidadores = users;
+      this.allMascotas = pets;
+      this.filterData(); 
+    });
+  }
 
-  ionViewDidEnter() {
-    // Solo carga el mapa si NO ha sido inicializado antes
-    if (!this.mapInitialized) {
-      
-      // ESPERAMOS UN MOMENTO (150ms) PARA QUE EL CSS SE APLIQUE
-      setTimeout(() => {
-        this.loadMap();
-        this.mapInitialized = true; // Marca como inicializado
-      }, 50); // 150ms es un retraso seguro y casi imperceptible
+  ngOnDestroy() {
+    this.dataSub?.unsubscribe();
+  }
 
+  filterData() {
+    const query = this.searchQuery.trim().toLowerCase();
+    if (!query) {
+      this.cuidadores = [...this.allCuidadores];
+      this.mascotas = [...this.allMascotas];
+      return;
     }
+    this.cuidadores = this.allCuidadores.filter(c => 
+      (c.nombre && c.nombre.toLowerCase().includes(query)) || 
+      (c.email && c.email.toLowerCase().includes(query))
+    );
+    this.mascotas = this.allMascotas.filter(m => 
+      m.nombre?.toLowerCase().includes(query)
+    );
   }
 
-
-  loadMap() {
-    // Coordenadas de ejemplo (Villaviciosa de Odón, Madrid)
-    const lat = 40.3546;
-    const lng = -3.9038;
-
-    // 1. Inicializa el mapa
-    this.map = L.map('map').setView([lat, lng], 14);
-
-    // 2. Añade la capa de "tiles"
-    this.darkTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 20
-    }).addTo(this.map);
-
-    // 3. Añadir marcadores
-    this.addPriceMarkers();
+  onSearchChange(event: any) {
+    this.searchQuery = event.target.value;
+    this.filterData();
   }
 
-  addPriceMarkers() {
-    if (!this.map) return; // Seguridad
+  abrirChat(item: any) {
+    const myUid = this.authService.getUserId(); // Usando tu función getUserId()
+    const myName = "Usuario"; 
 
-    const locations = [
-      { lat: 40.358, lng: -3.905, price: 10 },
-      { lat: 40.355, lng: -3.900, price: 12 },
-      { lat: 40.352, lng: -3.898, price: 13 },
-      { lat: 40.351, lng: -3.910, price: 15 },
-      { lat: 40.360, lng: -3.895, price: 8 },
-    ];
+    if (!myUid) {
+      this.router.navigate(['/login']);
+      return;
+    }
 
-    locations.forEach(loc => {
-      const priceIcon = L.divIcon({
-        className: 'price-marker', // La clase CSS que definimos
-        html: `<div>$${loc.price}</div>`,
-        iconSize: [45, 28],   // [ancho, alto]
-        iconAnchor: [22, 14]  // [mitad de ancho, mitad de alto]
+    // Receptor: ownerId para mascotas, uid o id para usuarios según tu listUsuarios
+    const receptorId = item.ownerId || item.uid || item.id; 
+    const receptorNombre = item.nombre || item.email || 'Usuario';
+
+    if (myUid === receptorId) {
+      alert('Esta mascota/perfil es tuyo');
+      return;
+    }
+
+    this.chatService.getOrCreateChat(myUid, myName, receptorId, receptorNombre).subscribe(chatId => {
+      this.router.navigate(['/tabs/chat'], { 
+        queryParams: { chatId: chatId, nombre: receptorNombre } 
       });
-
-      L.marker([loc.lat, loc.lng], { icon: priceIcon })
-        .addTo(this.map!);
     });
   }
 }

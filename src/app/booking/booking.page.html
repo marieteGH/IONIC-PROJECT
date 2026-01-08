@@ -1,54 +1,46 @@
-<ion-content [fullscreen]="true" class="page-dark">
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>Encuentra Cuidadores y Mascotas</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar 
+      [(ngModel)]="searchQuery"
+      placeholder="Buscar por nombre..." 
+      (ionInput)="onSearchChange($event)">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
 
-  <div class="page-wrapper">
+<ion-content>
+  <ion-list-header>
+    <ion-label>Cuidadores Disponibles</ion-label>
+  </ion-list-header>
+  
+  <div class="horizontal-scroll">
+    <ion-card *ngFor="let user of cuidadores" class="item-card">
+      <img [src]="user.fotoUrl || 'assets/imgs/logo.png'">
+      <ion-card-header>
+        <ion-card-title>{{ user.nombre || user.email }}</ion-card-title>
+      </ion-card-header>
+      <ion-button fill="clear" expand="block" (click)="abrirChat(user)">
+        <ion-icon slot="start" name="chatbubbles-outline"></ion-icon> Chat
+      </ion-button>
+    </ion-card>
+  </div>
 
-    <div class="sticky-header">
-      <div class="search-row">
-        <ion-icon name="search-outline" class="search-icon"></ion-icon>
-        <input class="search-input" placeholder="VILLAVICIOSA" />
-        <ion-icon name="link-outline" class="link-icon"></ion-icon>
-      </div>
-
-      <div class="meta-row">
-        <div class="meta-left">
-          <ion-button fill="outline" size="small" class="Filtrar-btn">
-            <ion-icon slot="start" name="funnel-outline"></ion-icon>
-            Filtrar
-          </ion-button>
-          <ion-button fill="outline" size="small" class="Ordenar-btn">
-            Ordenar
-            <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
-          </ion-button>
-        </div>
-        <ion-text color="medium" class="results-text">99 resultados</ion-text>
-      </div>
-    </div>
-
-    <div class="main-content-wrapper">
-
-      <div id="map"></div>
-
-      <div class="results-list">
-        
-        <ion-card class="perro-card">
-          <div class="media-wrap">
-            <ion-img src="assets/imgs/perrillo.jpg" class="fotoPerro"></ion-img>
-          </div>
-
-          <ion-card-header>
-            <ion-card-title>CONSTANTIN</ion-card-title>
-            <ion-card-subtitle class="muted">
-              <ion-icon name="star"></ion-icon> 4,8 (500 reseñas) ·
-              <ion-icon name="location-outline"></ion-icon> 10 kilómetros
-            </ion-card-subtitle>
-          </ion-card-header>
-
-          <ion-card-content class="price-row">
-            <div class="price">
-              <strong>$12</strong> <span>la hora</span>
-            </div>
-            <ion-button class="Seleccionar">Seleccionar</ion-button>
-          </ion-card-content>
-        </ion-card>
-
-        </div> </div> </div> </ion-content>
+  <ion-list-header>
+    <ion-label>Mascotas Cercanas</ion-label>
+  </ion-list-header>
+  
+  <div class="horizontal-scroll">
+    <ion-card *ngFor="let mascota of mascotas" class="item-card">
+      <img [src]="mascota.foto || 'assets/imgs/perrillo.jpg'">
+      <ion-card-header>
+        <ion-card-title>{{ mascota.nombre }}</ion-card-title>
+      </ion-card-header>
+      <ion-button fill="clear" expand="block" (click)="abrirChat(mascota)">
+        <ion-icon slot="start" name="paw-outline"></ion-icon> Dueño
+      </ion-button>
+    </ion-card>
+  </div>
+</ion-content>

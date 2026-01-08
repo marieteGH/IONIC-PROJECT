@@ -1,60 +1,49 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/home"></ion-back-button>
-    </ion-buttons>
-
-    <ion-title>
-      <div class="chat-header">
-        <img class="avatar" [src]="contacto.avatar" alt="avatar" />
-
-        <div class="user-info">
-          <h2 class="name">{{ contacto.nombre }}</h2>
-          <p class="status">{{ contacto.estado }}</p>
-        </div>
-      </div>
-    </ion-title>
-
-    <ion-buttons slot="end">
-      <ion-button>
-        <ion-icon name="call-outline"></ion-icon>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start" *ngIf="chatId">
+      <ion-button (click)="volverALista()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
+    <ion-title>{{ chatId ? 'Chat con: ' + receptorNombre : 'Mis Mensajes' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
-  <div class="messages-container">
-
-    <div 
-      class="message-bubble" 
-      *ngFor="let msg of mensajes"
-      [ngClass]="{ enviado: msg.enviado, recibido: !msg.enviado }"
-    >
-      <p class="texto">{{ msg.texto }}</p>
-
-      <span class="hora">{{ msg.hora }}</span>
+  <div *ngIf="!chatId">
+    <ion-list lines="full">
+      <ion-item button *ngFor="let chat of misChats$ | async" (click)="irAChat(chat)">
+        <ion-avatar slot="start">
+          <ion-icon name="person-circle-outline" style="font-size: 40px;"></ion-icon>
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ getNombreChat(chat) }}</h2>
+          <p>{{ chat.lastMessage }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <div *ngIf="(misChats$ | async)?.length === 0" style="text-align: center; margin-top: 20px;">
+      <p>No tienes mensajes.</p>
     </div>
-
   </div>
 
+  <div class="chat-container ion-padding" *ngIf="chatId">
+    <div *ngFor="let msg of mensajes$ | async" 
+         [ngClass]="msg.senderId === myUid ? 'msg sent' : 'msg received'">
+      <div class="bubble">
+        <p>{{ msg.texto }}</p>
+      </div>
+    </div>
+  </div>
 </ion-content>
 
-<ion-footer class="ion-no-border">
-  <ion-toolbar class="chat-input-toolbar">
-    <ion-item lines="none" class="input-box">
-      <ion-input 
-        placeholder="Mensaje..." 
-        [(ngModel)]="mensajeNuevo"
-        (keyup.enter)="enviarMensaje()"
-      ></ion-input>
-
-      <ion-buttons slot="end">
-        <ion-button (click)="enviarMensaje()">
-          <ion-icon name="send-outline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
+<ion-footer *ngIf="chatId">
+  <ion-toolbar>
+    <ion-item lines="none" style="--background: #f4f4f4; margin: 8px; border-radius: 20px;">
+      <ion-input [(ngModel)]="nuevoMensaje" placeholder="Mensaje..." (keyup.enter)="enviar()"></ion-input>
+      <ion-button slot="end" fill="clear" (click)="enviar()">
+        <ion-icon name="send"></ion-icon>
+      </ion-button>
     </ion-item>
   </ion-toolbar>
 </ion-footer>
