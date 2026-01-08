@@ -1,26 +1,39 @@
 :host {
-  --ion-background-color: #0f1720;
-  --ion-color: #fff;
+  /* Base */
+  --ion-background-color: #0e141b;
+  --ion-text-color: #e8eef5;
+  --ion-color-primary: #4da3ff;
+
   display: block;
-  color: #e6eef6;
+  background: var(--ion-background-color);
+  color: var(--ion-text-color);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
+
+/* =========================
+   HEADER + SEARCH
+========================= */
 
 ion-header .search-bar-toolbar {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 8px 12px;
-  background: transparent;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #0e141b;
 }
 
 ion-searchbar {
-  --background: #0b1220;
-  --placeholder-color: #9aa4b2;
-  --border-radius: 10px;
+  --background: #161e28;
+  --placeholder-color: #9aa7b6;
+  --color: #e8eef5;
+  --border-radius: 12px;
   --box-shadow: none;
-  width: 100%;
+  border: 1px solid #243042;
 }
+
+/* =========================
+   QUICK BUTTONS
+========================= */
 
 .quick-buttons {
   display: flex;
@@ -29,81 +42,73 @@ ion-searchbar {
 }
 
 .quick-buttons ion-button {
-  --background: transparent;
-  --border-color: rgba(255,255,255,0.08);
-  color: #dbe9ff;
-  border-radius: 8px;
+  --background: #161e28;
+  --color: #dce6f2;
+  --border-color: #243042;
+  border-radius: 10px;
   border-width: 1px;
+  font-size: 0.85rem;
 }
 
+.quick-buttons ion-button:hover {
+  --background: #1e2938;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+
 .section {
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 6px 2px 12px;
+  margin: 6px 4px 12px;
 }
 
 h2 {
   margin: 0;
   font-size: 1.05rem;
-  color: #dfe9f6;
+  color: #f1f6fc;
 }
+
+/* =========================
+   CARDS
+========================= */
 
 .caregivers-grid ion-card,
 .pet-card {
-  background: linear-gradient(180deg, #0d1a24 0%, #081019 100%);
-  border-radius: 12px;
-  padding: 6px;
-  box-shadow: 0 6px 18px rgba(2,8,15,0.6);
+  background: #161e28;
+  border-radius: 14px;
+  padding: 8px;
+  border: 1px solid #243042;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.04);
 }
+
+.caregivers-grid ion-card:hover,
+.pet-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
+}
+
+/* =========================
+   IMAGES
+========================= */
 
 .care-card img.avatar,
 .pet-card img.pet-avatar {
   width: 100%;
   height: 140px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
   display: block;
-}
-
-ion-card-content {
-  padding: 8px 4px 12px;
-}
-
-.name, .pet-name {
-  margin: 6px 0 2px;
-  font-size: 0.98rem;
-  color: #f6fbff;
-}
-
-.desc, .pet-desc {
-  margin: 0;
-  font-size: 0.82rem;
-  color: #9fb1c8;
-  height: 30px;
-  overflow: hidden;
-}
-
-.stars {
-  margin-top: 6px;
-  color: #ffcc00;
-  display: flex;
-  gap: 2px;
-  font-size: 0.95rem;
-}
-
-.caregivers-grid ion-card:hover,
-.pet-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(2,8,15,0.7);
+  background: #0e141b;
 }
 
 @media (min-width: 768px) {
@@ -112,10 +117,57 @@ ion-card-content {
     height: 160px;
   }
 }
-ion-fab {
-  margin-bottom: 70px; /* Ajusta este valor si necesitas más o menos altura */
+
+/* =========================
+   CARD CONTENT
+========================= */
+
+ion-card-content {
+  padding: 10px 6px 12px;
 }
-/* Esto hace que la cabecera del usuario sea transparente para tomar el color de la tarjeta */
+
+.name,
+.pet-name {
+  margin: 6px 0 2px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f4f8fd;
+}
+
+.desc,
+.pet-desc {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.3;
+  color: #a7b4c6;
+  height: 32px;
+  overflow: hidden;
+}
+
+/* =========================
+   STARS
+========================= */
+
+.stars {
+  margin-top: 6px;
+  display: flex;
+  gap: 2px;
+  font-size: 0.9rem;
+  color: #ffc94a;
+}
+
+/* =========================
+   FAB
+========================= */
+
+ion-fab {
+  margin-bottom: 70px;
+}
+
+/* =========================
+   USER HEADER
+========================= */
+
 .user-header {
   --background: transparent;
   --padding-start: 10px;

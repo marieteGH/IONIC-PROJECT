@@ -34,7 +34,6 @@ export class ChatPage implements OnInit {
   }
 
   ngOnInit() {
-    // Obtenemos tu ID real usando la función de tu servicio
     this.myUid = this.auth.getUserId() || '';
 
     this.route.queryParams.subscribe(params => {
@@ -42,11 +41,9 @@ export class ChatPage implements OnInit {
       this.receptorNombre = params['nombre'] || 'Chat';
       
       if (this.chatId) {
-        // Cargar mensajes de la conversación
         this.mensajes$ = this.chatService.getMessages(this.chatId);
         this.misChats$ = null;
       } else {
-        // Cargar lista de conversaciones
         this.mensajes$ = null;
         if (this.myUid) {
           this.misChats$ = this.chatService.getMyChats(this.myUid);
@@ -55,17 +52,17 @@ export class ChatPage implements OnInit {
     });
   }
 
-  // Función para extraer el nombre del otro usuario del chat
+  // CAMBIO: Lógica mejorada para extraer el nombre de pantalla
   getNombreChat(chat: any): string {
     if (chat.nombres) {
       const ids = Object.keys(chat.nombres);
       const otroId = ids.find(id => id !== this.myUid);
+      // Retorna el nombre guardado en el mapa de nombres de Firestore
       return otroId ? chat.nombres[otroId] : 'Usuario';
     }
     return 'Conversación';
   }
 
-  // CORRECCIÓN: Ahora pasamos el nombre al navegar para evitar el "Chat con: Conversación"
   irAChat(chat: any) {
     const nombre = this.getNombreChat(chat);
     this.router.navigate(['/tabs/chat'], { 

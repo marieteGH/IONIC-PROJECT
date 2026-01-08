@@ -20,13 +20,17 @@
     <ion-card *ngFor="let user of cuidadores" class="item-card">
       <img [src]="user.fotoUrl || 'assets/imgs/logo.png'">
       <ion-card-header>
-        <ion-card-title>{{ user.nombre || user.email }}</ion-card-title>
+        <ion-card-title>{{ user.nombre || user.displayName || user.email }}</ion-card-title>
       </ion-card-header>
       <ion-button fill="clear" expand="block" (click)="abrirChat(user)">
         <ion-icon slot="start" name="chatbubbles-outline"></ion-icon> Chat
       </ion-button>
     </ion-card>
   </div>
+
+  <ion-list-header>
+    <ion-label>Mascotas Cercanas</ion-label>
+  </ion-list-header>
   
   <div class="horizontal-scroll">
     <ion-card *ngFor="let mascota of mascotas" class="item-card">
