@@ -1,5 +1,4 @@
 <ion-tabs>
-  <!-- Outlet donde se renderizan las páginas de las pestañas -->
   <ion-router-outlet></ion-router-outlet>
 
   <ion-tab-bar slot="bottom">
@@ -13,7 +12,7 @@
       <ion-label>Booking</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="chat" href="/tabs/chat">
+    <ion-tab-button tab="chat" href="/tabs/chat" (click)="onChatTabClick()">
       <ion-icon name="chatbubbles"></ion-icon>
       <ion-label>Chat</ion-label>
     </ion-tab-button>
@@ -23,7 +22,6 @@
       <ion-label>Publicación</ion-label>
     </ion-tab-button>
 
-    <!-- pestañas nuevas: tab en kebab-case sin acentos -->
     <ion-tab-button tab="add-mascota" href="/tabs/add-mascota">
       <ion-icon name="paw"></ion-icon>
       <ion-label>Añadir</ion-label>

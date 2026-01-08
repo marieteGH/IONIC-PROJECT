@@ -1,16 +1,16 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ViewWillEnter } from '@ionic/angular';
+import { IonicModule, ViewWillEnter, ViewDidLeave } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { addIcons } from 'ionicons';
 import { send, arrowBack, personCircleOutline } from 'ionicons/icons';
 
 // Servicios
 import { ChatService } from '../services/chat.service';
 import { AuthService } from '../services/auth.service';
-import { UsuarioService } from '../services/usuario.service'; // IMPORTANTE
+import { UsuarioService } from '../services/usuario.service';
 
 @Component({
   selector: 'app-chat',
@@ -19,47 +19,92 @@ import { UsuarioService } from '../services/usuario.service'; // IMPORTANTE
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class ChatPage implements OnInit, ViewWillEnter {
+export class ChatPage implements OnInit, ViewWillEnter, ViewDidLeave, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private chatService = inject(ChatService);
   private auth = inject(AuthService);
-  private usuarioService = inject(UsuarioService); // Inyectamos servicio de usuarios
+  private usuarioService = inject(UsuarioService);
 
   chatId: string | null = null;
   receptorNombre: string = '';
   nuevoMensaje: string = '';
   
+  // Usamos BehaviorSubject para controlar manualmente la lista de chats
+  misChats$ = new BehaviorSubject<any[]>([]); 
   mensajes$: Observable<any[]> | null = null;
-  misChats$: Observable<any[]> | null = null;
   
+  // Variables para gestionar las suscripciones y evitar fugas de memoria
+  private chatSubscription: Subscription | null = null;
+  private refreshSubscription: Subscription | null = null;
+
   myUid: string = ''; 
-  usuariosMap: Record<string, string> = {}; // Mapa para nombres reales
+  usuariosMap: Record<string, string> = {}; 
 
   constructor() {
     addIcons({ send, arrowBack, personCircleOutline });
   }
 
   ngOnInit() {
-    // Inicialización básica
     this.checkUserAndLoad();
     
+    // 1. Escuchar la navegación normal (cambios de URL)
     this.route.queryParams.subscribe(params => {
       this.chatId = params['chatId'] || null;
-      // Si nos pasan el nombre por parámetro lo usamos, si no, se calculará
       this.receptorNombre = params['nombre'] || ''; 
       
       if (this.chatId) {
+        // Si hay ID, cargamos los mensajes de esa conversación específica
         this.mensajes$ = this.chatService.getMessages(this.chatId);
+      } else {
+        // Si no hay ID, estamos en la bandeja de entrada -> Cargar todos los chats
+        this.mensajes$ = null;
+        this.cargarChats();
+      }
+    });
+
+    // 2. Escuchar el CLICK en el Tab (desde TabsPage)
+    // Esto asegura que si tocas el icono "Chat", se fuerce una recarga desde la BD
+    this.refreshSubscription = this.chatService.refresh$.subscribe(() => {
+      console.log('Botón Tab pulsado: Recargando chats desde la base de datos...');
+      
+      // Si estamos en la lista principal, recargamos.
+      // Si estabas dentro de un chat, la navegación del href="/tabs/chat" te sacará,
+      // y el punto 1 (queryParams) se encargará, pero esto refuerza la acción.
+      if (!this.chatId) {
+        this.cargarChats();
       }
     });
   }
 
-  // Se ejecuta SIEMPRE que entras a la pestaña
   ionViewWillEnter() {
     this.checkUserAndLoad();
+    this.cargarNombresUsuarios();
     
-    // Recargamos la lista de usuarios para asegurar nombres frescos
+    // Carga inicial al entrar en la vista
+    if (!this.chatId) {
+      this.cargarChats();
+    }
+  }
+
+  ionViewDidLeave() {
+    // Al salir, cancelamos la suscripción a los chats para "apagar" la escucha
+    if (this.chatSubscription) {
+      this.chatSubscription.unsubscribe();
+      this.chatSubscription = null;
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.chatSubscription) this.chatSubscription.unsubscribe();
+    if (this.refreshSubscription) this.refreshSubscription.unsubscribe();
+  }
+
+  checkUserAndLoad() {
+    this.myUid = this.auth.getUserId() || '';
+  }
+
+  cargarNombresUsuarios() {
     this.usuarioService.listUsuarios().subscribe(usuarios => {
       usuarios.forEach(u => {
         if (u.id) {
@@ -67,40 +112,36 @@ export class ChatPage implements OnInit, ViewWillEnter {
         }
       });
     });
-
-    // Si estamos en la vista de lista (no dentro de un chat), forzamos recarga de chats
-    if (!this.chatId) {
-      this.cargarChats();
-    }
   }
 
-  checkUserAndLoad() {
-    this.myUid = this.auth.getUserId() || '';
-  }
-
+  // Lógica principal de recuperación de datos
   cargarChats() {
-    if (this.myUid) {
-      // Al reasignar el observable, la vista se actualizará con los datos más recientes
-      this.misChats$ = this.chatService.getMyChats(this.myUid);
+    if (!this.myUid) return;
+
+    // Reiniciamos la suscripción para asegurar datos frescos
+    if (this.chatSubscription) {
+      this.chatSubscription.unsubscribe();
     }
+
+    console.log('Consultando base de datos para usuario:', this.myUid);
+
+    // Llamada al servicio que ejecuta la query "array-contains"
+    this.chatSubscription = this.chatService.getMyChats(this.myUid).subscribe({
+      next: (chats) => {
+        console.log('Chats recuperados:', chats.length);
+        this.misChats$.next(chats);
+      },
+      error: (err) => console.error('Error al recuperar chats:', err)
+    });
   }
 
   getNombreChat(chat: any): string {
-    // 1. Identificar el ID del otro participante
     if (chat.participantes && Array.isArray(chat.participantes)) {
       const otroId = chat.participantes.find((id: string) => id !== this.myUid);
       
-      // 2. Si tenemos su ID, buscamos su nombre real en el mapa cargado
-      if (otroId && this.usuariosMap[otroId]) {
-        return this.usuariosMap[otroId];
-      }
-      
-      // 3. Fallback: Si no está en el mapa, intentamos usar el nombre guardado en el chat
-      if (otroId && chat.nombres && chat.nombres[otroId]) {
-        return chat.nombres[otroId];
-      }
+      if (otroId && this.usuariosMap[otroId]) return this.usuariosMap[otroId];
+      if (otroId && chat.nombres && chat.nombres[otroId]) return chat.nombres[otroId];
     }
-    
     return 'Usuario Desconocido';
   }
 
@@ -114,8 +155,6 @@ export class ChatPage implements OnInit, ViewWillEnter {
   volverALista() {
     this.chatId = null;
     this.router.navigate(['/tabs/chat'], { queryParams: {} });
-    // Al volver, nos aseguramos de recargar la lista
-    this.cargarChats();
   }
 
   enviar() {

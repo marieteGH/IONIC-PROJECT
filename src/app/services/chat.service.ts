@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { 
   Firestore, collection, addDoc, query, where, 
-  getDocs, collectionData, doc, orderBy, serverTimestamp, updateDoc 
+  getDocs, doc, orderBy, serverTimestamp, updateDoc, onSnapshot 
 } from '@angular/fire/firestore';
-import { Observable, from, map, switchMap, of } from 'rxjs';
+import { Observable, from, map, switchMap, of, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,14 @@ import { Observable, from, map, switchMap, of } from 'rxjs';
 export class ChatService {
   private firestore = inject(Firestore);
 
-  // Ahora guarda obligatoriamente los nombres para evitar el texto "Conversación"
+  // Gatillo para recargar
+  private refreshTrigger = new Subject<void>();
+  refresh$ = this.refreshTrigger.asObservable();
+
+  triggerRefresh() {
+    this.refreshTrigger.next();
+  }
+
   getOrCreateChat(myUid: string, myName: string, receptorUid: string, receptorName: string): Observable<string> {
     const chatsRef = collection(this.firestore, 'chats');
     const q = query(chatsRef, where('participantes', 'array-contains', myUid));
@@ -40,22 +47,72 @@ export class ChatService {
     );
   }
 
+  // --- CORRECCIÓN IMPORTANTE AQUÍ ---
+  // Usamos onSnapshot dentro de un Observable manual.
+  // Esto elimina el error "outside injection context" y funciona siempre.
   getMyChats(myUid: string): Observable<any[]> {
     const chatsRef = collection(this.firestore, 'chats');
-    const q = query(chatsRef, where('participantes', 'array-contains', myUid), orderBy('updatedAt', 'desc'));
-    return collectionData(q, { idField: 'id' });
+    
+    // NOTA: Esta consulta requiere el índice que debes crear con el link de la consola
+    const q = query(
+      chatsRef, 
+      where('participantes', 'array-contains', myUid), 
+      orderBy('updatedAt', 'desc')
+    );
+
+    return new Observable((observer) => {
+      // onSnapshot escucha cambios en tiempo real de forma robusta
+      const unsubscribe = onSnapshot(q, 
+        (querySnapshot) => {
+          const chats = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          observer.next(chats);
+        },
+        (error) => {
+          observer.error(error);
+        }
+      );
+
+      // Cuando el componente se destruye, dejamos de escuchar
+      return () => unsubscribe();
+    });
   }
 
   getMessages(chatId: string): Observable<any[]> {
+    // También aplicamos la corrección aquí por seguridad
     const messagesRef = collection(this.firestore, `chats/${chatId}/mensajes`);
     const q = query(messagesRef, orderBy('createdAt', 'asc'));
-    return collectionData(q, { idField: 'id' });
+    
+    return new Observable((observer) => {
+      const unsubscribe = onSnapshot(q, 
+        (querySnapshot) => {
+          const messages = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          observer.next(messages);
+        },
+        (error) => observer.error(error)
+      );
+      return () => unsubscribe();
+    });
   }
 
   async sendMessage(chatId: string, senderId: string, texto: string) {
     const messagesRef = collection(this.firestore, `chats/${chatId}/mensajes`);
     const chatDoc = doc(this.firestore, `chats/${chatId}`);
-    await addDoc(messagesRef, { senderId, texto, createdAt: serverTimestamp() });
-    await updateDoc(chatDoc, { lastMessage: texto, updatedAt: serverTimestamp() });
+    
+    await addDoc(messagesRef, { 
+      senderId, 
+      texto, 
+      createdAt: serverTimestamp() 
+    });
+    
+    await updateDoc(chatDoc, { 
+      lastMessage: texto, 
+      updatedAt: serverTimestamp() 
+    });
   }
 }
