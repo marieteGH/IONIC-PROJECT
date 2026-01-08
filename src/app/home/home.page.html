@@ -1,68 +1,66 @@
-<ion-header class="ion-no-border">
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-searchbar 
-      placeholder="Buscar" 
-      class="custom-search"
-      (ionInput)="onSearchChange($event)">
-    </ion-searchbar>
-  </ion-toolbar>
-
-  <ion-toolbar class="action-buttons-toolbar">
-    <ion-buttons slot="start">
-      <ion-button fill="outline" class="action-button">
-        <ion-icon slot="start" name="heart-outline"></ion-icon>
-        Mascotas Favoritas
-      </ion-button>
-      <ion-button fill="outline" class="action-button">
-        <ion-icon slot="start" name="time-outline"></ion-icon>
-        Historial
-      </ion-button>
-    </ion-buttons>
-    <ion-buttons slot="end">
-      <ion-button fill="clear">
-        <ion-icon name="person-circle-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+    <ion-title>Muro de Mascotas</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
+  
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Muro</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-  <ion-list-header lines="none">
-    <ion-label class="section-title">Cuidadores</ion-label>
-    <ion-icon name="chevron-forward-outline" color="dark"></ion-icon>
-  </ion-list-header>
+  <div class="feed-container">
+    
+    <ion-card *ngFor="let p of publicaciones$ | async">
+      
+      <ion-item lines="none" class="user-header">
+        <ion-avatar slot="start" style="width: 32px; height: 32px;">
+          <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+        </ion-avatar>
+        <ion-label>
+          <h3 style="font-weight: 600;">{{ usuariosMap[p.usuarioId] || 'Cargando...' }}</h3>
+          <p style="font-size: 0.8rem; color: #888;">Dueño de {{ p.mascotaNombre }}</p>
+        </ion-label>
+      </ion-item>
 
-  <div class="horizontal-scroll-container">
-    <ion-card *ngFor="let cuidador of cuidadores" (click)="verDetalleCuidador(cuidador.id)" class="item-card">
-      <img [src]="cuidador.imagenUrl" [alt]="cuidador.nombre" class="item-image image-cuidadores">
-      <ion-card-header class="card-header-padding">
-        <ion-card-title class="card-title">{{ cuidador.nombre }}</ion-card-title>
+      <img [src]="p.imagenUrl" *ngIf="p.imagenUrl" alt="Foto mascota" 
+           style="width: 100%; max-height: 350px; object-fit: cover; display: block;"/>
+
+      <ion-card-header>
+        <ion-card-title>{{ p.titulo }}</ion-card-title>
       </ion-card-header>
-      <ion-card-content class="rating-content card-content-padding">
-        <p class="description">Descripción</p>
-        <div class="rating">
-          <ion-icon *ngFor="let star of [1, 2, 3, 4, 5]" [name]="getStarIcon(cuidador.rating, star)" color="warning" class="rating-star"></ion-icon>
+
+      <ion-card-content>
+        <p>{{ p.descripcion }}</p>
+        
+        <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+          <ion-chip color="secondary" mode="ios" outline="true" *ngIf="p.ubicacion">
+            <ion-icon name="location-outline"></ion-icon>
+            <ion-label>{{ p.ubicacion }}</ion-label>
+          </ion-chip>
+
+          <ion-chip color="medium" mode="ios" outline="true" *ngIf="p.fechaInicio">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <ion-label>Desde: {{ p.fechaInicio | date:'shortDate' }}</ion-label>
+          </ion-chip>
         </div>
       </ion-card-content>
     </ion-card>
+
+    <div *ngIf="(publicaciones$ | async)?.length === 0" class="ion-text-center ion-padding" style="margin-top: 50px;">
+      <ion-icon name="paw-outline" style="font-size: 64px; color: #ccc;"></ion-icon>
+      <p style="color: #888;">No hay publicaciones todavía.<br>¡Sube la primera foto de tu mascota!</p>
+    </div>
+
   </div>
 
-  <ion-list-header lines="none">
-    <ion-label class="section-title">Mascotas a cuidar</ion-label>
-    <ion-icon name="chevron-forward-outline" color="dark"></ion-icon>
-  </ion-list-header>
-
-  <div class="horizontal-scroll-container">
-    <ion-card *ngFor="let mascota of mascotas" (click)="verDetalleMascota(mascota.id)" class="item-card">
-      <img [src]="mascota.imagenUrl" [alt]="mascota.nombre" class="item-image image-mascotas">
-      <ion-card-header class="card-header-padding">
-        <ion-card-title class="card-title">{{ mascota.nombre }}</ion-card-title>
-      </ion-card-header>
-      <ion-card-content class="card-content-padding">
-        <p class="description">Descripción</p>
-      </ion-card-content>
-    </ion-card>
-  </div>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 70px;">
+    <ion-fab-button routerLink="/tabs/publicacion">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>

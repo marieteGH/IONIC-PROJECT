@@ -9,7 +9,6 @@
 
 <ion-content class="ion-padding">
 
-  <!-- Imagen -->
   <div class="image-selector" (click)="seleccionarImagen()">
     <img *ngIf="imagenPreview" [src]="imagenPreview" class="preview" />
     <div *ngIf="!imagenPreview" class="placeholder">
@@ -18,25 +17,31 @@
     </div>
   </div>
 
-  <!-- Nombre mascota -->
   <ion-item>
-    <ion-label position="floating">Nombre de la mascota</ion-label>
-    <ion-input [(ngModel)]="form.mascotaNombre"></ion-input>
+    <ion-select 
+      label="Selecciona tu mascota" 
+      label-placement="floating" 
+      [(ngModel)]="form.mascotaNombre"
+      placeholder="Elige una..."
+      interface="popover">
+      
+      <ion-select-option *ngFor="let m of mascotas$ | async" [value]="m.nombre">
+        {{ m.nombre }}
+      </ion-select-option>
+
+    </ion-select>
   </ion-item>
 
-  <!-- Título -->
   <ion-item>
     <ion-label position="floating">Título</ion-label>
     <ion-input [(ngModel)]="form.titulo"></ion-input>
   </ion-item>
 
-  <!-- Descripción -->
   <ion-item>
     <ion-label position="floating">Descripción</ion-label>
     <ion-textarea rows="4" [(ngModel)]="form.descripcion"></ion-textarea>
   </ion-item>
 
-  <!-- Fecha inicio -->
   <ion-item>
     <ion-label>Fecha inicio</ion-label>
     <ion-datetime-button datetime="inicio"></ion-datetime-button>
@@ -45,7 +50,6 @@
     (ionChange)="form.fechaInicio = $event.detail.value">
   </ion-datetime>
 
-  <!-- Fecha fin -->
   <ion-item>
     <ion-label>Fecha fin</ion-label>
     <ion-datetime-button datetime="fin"></ion-datetime-button>
@@ -54,7 +58,6 @@
     (ionChange)="form.fechaFin = $event.detail.value">
   </ion-datetime>
 
-  <!-- Ubicación -->
   <ion-item>
     <ion-label position="floating">Ubicación</ion-label>
     <ion-input [(ngModel)]="form.ubicacion"></ion-input>

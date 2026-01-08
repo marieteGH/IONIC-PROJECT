@@ -112,3 +112,12 @@ ion-card-content {
     height: 160px;
   }
 }
+ion-fab {
+  margin-bottom: 70px; /* Ajusta este valor si necesitas más o menos altura */
+}
+/* Esto hace que la cabecera del usuario sea transparente para tomar el color de la tarjeta */
+.user-header {
+  --background: transparent;
+  --padding-start: 10px;
+  --min-height: 48px;
+}

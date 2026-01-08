@@ -18,6 +18,15 @@ export class AuthService {
     this.init();
   }
 
+  getUserId(): string | null {
+  const token = this.safeGetItem(this.TOKEN_KEY);
+  if (!token) return null;
+  
+  const payload = this.decodeJwt(token);
+  // Asumiendo que el ID viene en 'sub', 'uid' o 'user_id'
+  return payload ? (payload.sub || payload.uid || payload.user_id) : null;
+}
+
   // Inicializa y valida el token (si existe)
   private init(): Promise<void> {
     if (this.initPromise) return this.initPromise;
